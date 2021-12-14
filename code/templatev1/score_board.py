@@ -31,7 +31,7 @@ class ScoreBoard(QDockWidget):
         self.label_timeRemaining = QLabel("Time remaining: ")
 
         # More labels to show different information to the user throughout the game
-        self.label_playersTurn = QLabel("Current Turn: ")
+        self.label_playersTurn = QLabel("Black Goes First >")
         self.label_PrisonersTakenBlack = QLabel("Prisoners Taken by Black: ")
         self.label_PrisonersTakenWhite = QLabel("Prisoners Taken by White: ")
 
@@ -55,6 +55,8 @@ class ScoreBoard(QDockWidget):
         board.clickLocationSignal.connect(self.setClickLocation)
         # when the updateTimerSignal is emitted in the board the setTimeRemaining slot receives it
         board.updateTimerSignal.connect(self.setTimeRemaining)
+        board.changePlayerTurnSignal.connect(self.updatePlayerTurn)
+
 
     @pyqtSlot(str) # checks to make sure that the following slot is receiving an argument of the type 'int'
     def setClickLocation(self, clickLoc):
@@ -74,9 +76,7 @@ class ScoreBoard(QDockWidget):
     # Needs to be connected to board with signal
     def updatePlayerTurn(self, Piece):
 
-        if Piece == 0:
-            self.label_playersTurn.setText("Waiting For Game To Start")
-        elif Piece == 1:
+        if Piece == 1:
            self.label_playersTurn.setText("White's Turn To Move")
-        else:
+        elif Piece == 2:
            self.label_playersTurn.setText("Black's Turn To Move")
