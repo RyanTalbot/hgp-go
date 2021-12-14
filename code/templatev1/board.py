@@ -9,11 +9,13 @@ from piece import Piece
 class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
     clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
+    changePlayerTurnSignal = pyqtSignal(int)  # signal sent when swap player is updated.
 
     boardWidth = 6  # board is 6 squares wide
     boardHeight = 6  # board is 6 squares tall
     timerSpeed = 1000  # the timer updates ever 1 second
     counter = 300  # the number the counter will count down from 300
+    playerTurn = Piece.Black # starting player is always black
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -82,7 +84,7 @@ class Board(QFrame):  # base the board on a QFrame widget
             else:
                 self.counter -= 1
             # print('timerEvent()', self.counter)
-            # self.updateTimerSignal.emit(self.counter)
+            self.updateTimerSignal.emit(self.counter)
         else:
             super(Board, self).timerEvent(event)  # if we do not handle an event we should pass it to the super
             # class for handling other wise pass it to the super class for handling
@@ -174,3 +176,16 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def showNotification(self, message):
         QMessageBox.about(self, "!", message)
+
+# Can be moved to game logic if needed
+    def changePlayerTurn(self):
+        # function to swap turns
+        self.counter = 300 # reset timer every turn
+        print(" -- Next Players Turn -- ")
+        if self.turn == Piece.Black:
+            self.turn = Piece.White
+        else:
+            self.turn = Piece.Black
+
+        self.counter = 120
+        self.changePlayerTurnSignal.emit(self.turn)  # signal sent to display Current Turn message
