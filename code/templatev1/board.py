@@ -1,3 +1,5 @@
+import math
+
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -35,6 +37,19 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def mousePosToColRow(self, event):
         """convert the mouse click event to a row and column"""
+        # Save the x,y position of each click
+        x_pos = event.x()
+        y_pos = event.y()
+
+        x_coord = round(x_pos / self.squareWidth()-1)
+        y_coord = round(y_pos / self.squareHeight()-1)
+
+        print(x_coord, y_coord)
+
+        # Using 1 as a baseline to test for accurate clicks
+        self.boardArray[y_coord][x_coord] = 1
+        self.printBoardArray()
+        self.update()
 
     def squareWidth(self):
         """returns the width of one square in the board"""
@@ -67,7 +82,7 @@ class Board(QFrame):  # base the board on a QFrame widget
             else:
                 self.counter -= 1
             # print('timerEvent()', self.counter)
-            self.updateTimerSignal.emit(self.counter)
+            # self.updateTimerSignal.emit(self.counter)
         else:
             super(Board, self).timerEvent(event)  # if we do not handle an event we should pass it to the super
             # class for handling other wise pass it to the super class for handling
@@ -85,6 +100,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         print("mousePressEvent() - " + clickLoc)
         # TODO you could call some game logic here
         self.clickLocationSignal.emit(clickLoc)
+        self.mousePosToColRow(event)
 
     def resetGame(self):
         """clears pieces from the board"""
@@ -123,17 +139,18 @@ class Board(QFrame):  # base the board on a QFrame widget
                 else:
                         brush.setColor(QColor.fromRgb(217, 179, 255))
 
-
 # WORK NEEDED
     def drawPieces(self, painter):
         """draw the prices on the board"""
-        # colour = Qt.transparent  # empty square could be modeled with transparent pieces
-        for row in range(0, len(self.boardArray)):
-            for col in range(0, len(self.boardArray[0])):
+        color = Qt.transparent  # empty square could be modeled with transparent pieces
+        for row in range(-1, len(self.boardArray)):
+
+            for col in range(-1, len(self.boardArray)):
+
                 painter.save()
                 painter.translate(((self.squareWidth()) * row) + self.squareWidth() / 2,
                                   (self.squareHeight()) * col + self.squareHeight() / 2)
-                color = QColor(0, 0, 0)
+
 
                 # currently based on the array using INT variables
                 # will change to game pieces next
@@ -150,10 +167,10 @@ class Board(QFrame):  # base the board on a QFrame widget
 
                 radius = (self.squareWidth() - 2) / 2
                 radius2 = (self.squareHeight() - 2) / 2
+
                 center = QPoint(radius, radius2)
                 painter.drawEllipse(center, radius - 15, radius2 - 15)
                 painter.restore()
-
 
     def showNotification(self, message):
         QMessageBox.about(self, "!", message)
