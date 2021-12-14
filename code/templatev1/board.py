@@ -11,7 +11,7 @@ class Board(QFrame):  # base the board on a QFrame widget
     boardWidth = 6  # board is 6 squares wide
     boardHeight = 6  # board is 6 squares tall
     timerSpeed = 1000  # the timer updates ever 1 second
-    counter = 300  # the number the counter will count down from 300
+    counter = 5  # the number the counter will count down from 300
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -24,7 +24,8 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.start()  # start the game which will start the timer
 
         # use INT type for now in array
-        self.boardArray = [[0 for i in range(7)] for j in range(7)]  # TODO - create a 2d int/Piece array to store the state of the game
+        self.boardArray = [[0 for i in range(7)] for j in
+                           range(7)]  # TODO - create a 2d int/Piece array to store the state of the game
         self.printBoardArray()
 
     def printBoardArray(self):
@@ -53,15 +54,21 @@ class Board(QFrame):  # base the board on a QFrame widget
     def timerEvent(self, event):
         """this event is automatically called when the timer is updated. based on the timerSpeed variable """
         # TODO adapter this code to handle your timers
+        # message box won't pop up !
+
         if event.timerId() == self.timer.timerId():  # if the timer that has 'ticked' is the one in this class
-            if Board.counter == 0:
-                print("Game over")
+            if self.counter == 0:
+                self.shownotification("Time's Up, Game Over!")
+                # update when game logic is finished top show winner
+                # if black wins print  self.show_notification("Black WINS")
+                # if white wins print  self.show_notification("White WINS")
+                self.close()
             self.counter -= 1
-            print('timerEvent()', self.counter)
+            # print('timerEvent()', self.counter)
             self.updateTimerSignal.emit(self.counter)
         else:
             super(Board, self).timerEvent(event)  # if we do not handle an event we should pass it to the super
-            # class for handelingother wise pass it to the super class for handling
+            # class for handling other wise pass it to the super class for handling
 
     def paintEvent(self, event):
         """paints the board and the pieces of the game"""
@@ -111,3 +118,6 @@ class Board(QFrame):  # base the board on a QFrame widget
                 center = QPoint(radius, radius)
                 painter.drawEllipse(center, radius, radius)
                 painter.restore()
+
+    def shownotification(self, message):
+        QMessageBox.about(self, "!", message)
