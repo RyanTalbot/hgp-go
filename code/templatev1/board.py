@@ -76,7 +76,7 @@ class Board(QFrame):  # base the board on a QFrame widget
         """paints the board and the pieces of the game"""
         painter = QPainter(self)
         self.drawBoardSquares(painter)
-        # self.drawPieces(painter)
+        self.drawPieces(painter)
 
     def mousePressEvent(self, event):
         """this event is automatically called when the mouse is pressed"""
@@ -96,6 +96,7 @@ class Board(QFrame):  # base the board on a QFrame widget
     def tryMove(self, newX, newY):
         """tries to move a piece"""
 
+# WORKED NEEDED
     def drawBoardSquares(self, painter):
         """draw all the square on the board"""
         brush = QBrush(Qt.SolidPattern)
@@ -122,20 +123,37 @@ class Board(QFrame):  # base the board on a QFrame widget
                 else:
                         brush.setColor(QColor.fromRgb(217, 179, 255))
 
+
+# WORK NEEDED
     def drawPieces(self, painter):
         """draw the prices on the board"""
-        colour = Qt.transparent  # empty square could be modeled with transparent pieces
+        # colour = Qt.transparent  # empty square could be modeled with transparent pieces
         for row in range(0, len(self.boardArray)):
             for col in range(0, len(self.boardArray[0])):
                 painter.save()
-                painter.translate()
+                painter.translate(((self.squareWidth()) * row) + self.squareWidth() / 2,
+                                  (self.squareHeight()) * col + self.squareHeight() / 2)
+                color = QColor(0, 0, 0)
 
-                # TODO draw some the pieces as ellipses
-                # TODO choose your colour and set the painter brush to the correct colour
+                # currently based on the array using INT variables
+                # will change to game pieces next
+
+                if self.boardArray[col][row] == 0:
+                    color = QColor(Qt.transparent)
+                elif self.boardArray[col][row] == 1:
+                    color = QColor(Qt.white)
+                elif self.boardArray[col][row] == 2:
+                    color = QColor(Qt.black)
+
+                painter.setPen(color)
+                painter.setBrush(color)
+
                 radius = (self.squareWidth() - 2) / 2
-                center = QPoint(radius, radius)
-                painter.drawEllipse(center, radius, radius)
+                radius2 = (self.squareHeight() - 2) / 2
+                center = QPoint(radius, radius2)
+                painter.drawEllipse(center, radius - 15, radius2 - 15)
                 painter.restore()
+
 
     def showNotification(self, message):
         QMessageBox.about(self, "!", message)
