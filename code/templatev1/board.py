@@ -8,11 +8,10 @@ class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
     clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
 
-    # TODO set the board width and height to be square
-    boardWidth = 0  # board is 0 squares wide
-    boardHeight = 0  # board is 0 squares tall
-    timerSpeed = 1  # the timer updates ever 1 second
-    counter = 10  # the number the counter will count down from
+    boardWidth = 6  # board is 6 squares wide
+    boardHeight = 6  # board is 6 squares tall
+    timerSpeed = 1000  # the timer updates ever 1 second
+    counter = 300  # the number the counter will count down from 300
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -24,8 +23,9 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.isStarted = False  # game is not currently started
         self.start()  # start the game which will start the timer
 
-        self.boardArray = []  # TODO - create a 2d int/Piece array to store the state of the game
-        # self.printBoardArray()    # TODO - uncomment this method after create the array above
+        # use INT type for now in array
+        self.boardArray = [[0 for i in range(7)] for j in range(7)]  # TODO - create a 2d int/Piece array to store the state of the game
+        self.printBoardArray()
 
     def printBoardArray(self):
         """prints the boardArray in an attractive way"""
