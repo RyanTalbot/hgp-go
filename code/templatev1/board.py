@@ -104,6 +104,9 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.clickLocationSignal.emit(clickLoc)
         self.mousePosToColRow(event)
 
+        # testing player turn
+        self.changePlayerTurn()
+
     def resetGame(self):
         """clears pieces from the board"""
         # TODO write code to reset game
@@ -182,10 +185,9 @@ class Board(QFrame):  # base the board on a QFrame widget
         # function to swap turns
         self.counter = 300 # reset timer every turn
         print(" -- Next Players Turn -- ")
-        if self.turn == Piece.Black:
-            self.turn = Piece.White
+        if self.playerTurn == Piece.Black:
+            self.playerTurn = Piece.White
         else:
-            self.turn = Piece.Black
+            self.playerTurn = Piece.Black
 
-        self.counter = 120
-        self.changePlayerTurnSignal.emit(self.turn)  # signal sent to display Current Turn message
+        self.changePlayerTurnSignal.emit(self.playerTurn)  # signal sent to display Current PLayer Turn message
