@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QFrame
+from PyQt5.QtWidgets import QFrame, QMessageBox
 from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QPoint
 from PyQt5.QtGui import QPainter
 from piece import Piece
@@ -54,16 +54,18 @@ class Board(QFrame):  # base the board on a QFrame widget
     def timerEvent(self, event):
         """this event is automatically called when the timer is updated. based on the timerSpeed variable """
         # TODO adapter this code to handle your timers
-        # message box won't pop up !
 
         if event.timerId() == self.timer.timerId():  # if the timer that has 'ticked' is the one in this class
             if self.counter == 0:
-                self.shownotification("Time's Up, Game Over!")
+                self.showNotification("Time's Up, Game Over!")
                 # update when game logic is finished top show winner
                 # if black wins print  self.show_notification("Black WINS")
                 # if white wins print  self.show_notification("White WINS")
+                self.timer.stop()
                 self.close()
-            self.counter -= 1
+                self.resetGame()
+            else:
+                self.counter -= 1
             # print('timerEvent()', self.counter)
             self.updateTimerSignal.emit(self.counter)
         else:
@@ -87,6 +89,9 @@ class Board(QFrame):  # base the board on a QFrame widget
     def resetGame(self):
         """clears pieces from the board"""
         # TODO write code to reset game
+        self.boardArray = [[0 for i in range(7)] for j in
+                           range(7)]
+        # set game pieces back to zero in game logic
 
     def tryMove(self, newX, newY):
         """tries to move a piece"""
@@ -119,5 +124,5 @@ class Board(QFrame):  # base the board on a QFrame widget
                 painter.drawEllipse(center, radius, radius)
                 painter.restore()
 
-    def shownotification(self, message):
+    def showNotification(self, message):
         QMessageBox.about(self, "!", message)
