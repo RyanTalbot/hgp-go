@@ -1,6 +1,6 @@
-from PyQt5.QtWidgets import QFrame, QMessageBox
-from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QPoint
-from PyQt5.QtGui import QPainter
+from PyQt5.QtWidgets import *
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
 from piece import Piece
 
 
@@ -11,7 +11,7 @@ class Board(QFrame):  # base the board on a QFrame widget
     boardWidth = 6  # board is 6 squares wide
     boardHeight = 6  # board is 6 squares tall
     timerSpeed = 1000  # the timer updates ever 1 second
-    counter = 5  # the number the counter will count down from 300
+    counter = 300  # the number the counter will count down from 300
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -74,8 +74,8 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def paintEvent(self, event):
         """paints the board and the pieces of the game"""
-        # painter = QPainter(self)
-        # self.drawBoardSquares(painter)
+        painter = QPainter(self)
+        self.drawBoardSquares(painter)
         # self.drawPieces(painter)
 
     def mousePressEvent(self, event):
@@ -98,16 +98,29 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def drawBoardSquares(self, painter):
         """draw all the square on the board"""
-        # TODO set the default colour of the brush
+        brush = QBrush(Qt.SolidPattern)
+        brush.setColor(QColor.fromRgb(217, 179, 255))   # test color
+        painter.setBrush(brush)
+
         for row in range(0, Board.boardHeight):
+
+            if brush.color() == (QColor.fromRgb(217, 179, 255)):        # to ensure alternate colors on new rows
+                brush.setColor(QColor.fromRgb(0, 153, 153))
+            else:
+                brush.setColor(QColor.fromRgb(217, 179, 255))
+
             for col in range(0, Board.boardWidth):
                 painter.save()
-                colTransformation = self.squareWidth() * col  # TODO set this value equal the transformation in the column direction
-                rowTransformation = 0  # TODO set this value equal the transformation in the row direction
+                colTransformation = self.squareWidth() * col
+                rowTransformation = self.squareHeight() * row
                 painter.translate(colTransformation, rowTransformation)
-                painter.fillRect()  # TODO provide the required arguments
+                painter.fillRect(row,col,self.squareWidth(),self.squareHeight(),brush)
                 painter.restore()
-                # TODO change the colour of the brush so that a checkered board is drawn
+
+                if brush.color() == (QColor.fromRgb(217, 179, 255)):    # to ensure alternate colors on new columns
+                        brush.setColor(QColor.fromRgb(0, 153, 153))
+                else:
+                        brush.setColor(QColor.fromRgb(217, 179, 255))
 
     def drawPieces(self, painter):
         """draw the prices on the board"""
