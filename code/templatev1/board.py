@@ -15,7 +15,7 @@ class Board(QFrame):  # base the board on a QFrame widget
     boardHeight = 6  # board is 6 squares tall
     timerSpeed = 1000  # the timer updates ever 1 second
     counter = 300  # the number the counter will count down from 300
-    playerTurn = Piece.Black # starting player is always black
+    playerTurn = Piece.Black  # starting player is always black
 
     def __init__(self, parent):
         super().__init__(parent)
@@ -28,8 +28,8 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.start()  # start the game which will start the timer
 
         # use INT type for now in array
-        self.boardArray = [[0 for i in range(7)] for j in
-                           range(7)]  # TODO - create a 2d int/Piece array to store the state of the game
+        # TODO - create a 2d int/Piece array to store the state of the game
+        self.boardArray = [[0 for i in range(7)] for j in range(7)]
         self.printBoardArray()
 
     def printBoardArray(self):
@@ -43,8 +43,8 @@ class Board(QFrame):  # base the board on a QFrame widget
         x_pos = event.x()
         y_pos = event.y()
 
-        x_coord = round(x_pos / self.squareWidth()-1)
-        y_coord = round(y_pos / self.squareHeight()-1)
+        x_coord = round(x_pos / self.squareWidth() - 1)
+        y_coord = round(y_pos / self.squareHeight() - 1)
 
         print(x_coord, y_coord)
 
@@ -110,23 +110,22 @@ class Board(QFrame):  # base the board on a QFrame widget
     def resetGame(self):
         """clears pieces from the board"""
         # TODO write code to reset game
-        self.boardArray = [[0 for i in range(7)] for j in
-                           range(7)]
+        self.boardArray = [[0 for i in range(7)] for j in range(7)]
         # set game pieces back to zero in game logic
 
     def tryMove(self, newX, newY):
         """tries to move a piece"""
 
-# WORKED NEEDED
+    # WORKED NEEDED
     def drawBoardSquares(self, painter):
         """draw all the square on the board"""
         brush = QBrush(Qt.SolidPattern)
-        brush.setColor(QColor.fromRgb(217, 179, 255))   # test color
+        brush.setColor(QColor.fromRgb(217, 179, 255))  # test color
         painter.setBrush(brush)
 
         for row in range(0, Board.boardHeight):
 
-            if brush.color() == (QColor.fromRgb(217, 179, 255)):        # to ensure alternate colors on new rows
+            if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new rows
                 brush.setColor(QColor.fromRgb(0, 153, 153))
             else:
                 brush.setColor(QColor.fromRgb(217, 179, 255))
@@ -136,15 +135,15 @@ class Board(QFrame):  # base the board on a QFrame widget
                 colTransformation = self.squareWidth() * col
                 rowTransformation = self.squareHeight() * row
                 painter.translate(colTransformation, rowTransformation)
-                painter.fillRect(row,col,self.squareWidth(),self.squareHeight(),brush)
+                painter.fillRect(row, col, self.squareWidth(), self.squareHeight(), brush)
                 painter.restore()
 
-                if brush.color() == (QColor.fromRgb(217, 179, 255)):    # to ensure alternate colors on new columns
-                        brush.setColor(QColor.fromRgb(0, 153, 153))
+                if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new columns
+                    brush.setColor(QColor.fromRgb(0, 153, 153))
                 else:
-                        brush.setColor(QColor.fromRgb(217, 179, 255))
+                    brush.setColor(QColor.fromRgb(217, 179, 255))
 
-# WORK NEEDED
+    # WORK NEEDED
     def drawPieces(self, painter):
         """draw the prices on the board"""
         color = Qt.transparent  # empty square could be modeled with transparent pieces
@@ -155,7 +154,6 @@ class Board(QFrame):  # base the board on a QFrame widget
                 painter.save()
                 painter.translate(((self.squareWidth()) * row) + self.squareWidth() / 2,
                                   (self.squareHeight()) * col + self.squareHeight() / 2)
-
 
                 # currently based on the array using INT variables
                 # will change to game pieces next
@@ -180,10 +178,10 @@ class Board(QFrame):  # base the board on a QFrame widget
     def showNotification(self, message):
         QMessageBox.about(self, "!", message)
 
-# Can be moved to game logic if needed
+    # Can be moved to game logic if needed
     def changePlayerTurn(self):
         # function to swap turns
-        self.counter = 300 # reset timer every turn
+        self.counter = 300  # reset timer every turn
         print(" -- Next Players Turn -- ")
         if self.playerTurn == Piece.Black:
             self.playerTurn = Piece.White
