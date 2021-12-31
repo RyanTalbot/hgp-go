@@ -5,6 +5,12 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from piece import Piece
 
+# TODO - Show how much territory is controlled by a player
+# TODO - Allow a player to pass
+# TODO - Allow the game to be reset
+# TODO - Implement placement of stones in valid locations only
+# TODO - Implement capture of stone(s)
+
 
 class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
@@ -28,7 +34,6 @@ class Board(QFrame):  # base the board on a QFrame widget
         self.start()  # start the game which will start the timer
 
         # use INT type for now in array
-        # TODO - create a 2d int/Piece array to store the state of the game
         self.boardArray = [[0 for i in range(7)] for j in range(7)]
         self.printBoardArray()
 
@@ -70,8 +75,6 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def timerEvent(self, event):
         """this event is automatically called when the timer is updated. based on the timerSpeed variable """
-        # TODO adapter this code to handle your timers
-
         if event.timerId() == self.timer.timerId():  # if the timer that has 'ticked' is the one in this class
             if self.counter == 0:
                 self.showNotification("Time's Up, Game Over!")
@@ -100,7 +103,6 @@ class Board(QFrame):  # base the board on a QFrame widget
         clickLoc = "click location [" + str(event.x()) + "," + str(
             event.y()) + "]"  # the location where a mouse click was registered
         print("mousePressEvent() - " + clickLoc)
-        # TODO you could call some game logic here
         self.clickLocationSignal.emit(clickLoc)
         self.mousePosToColRow(event)
 
@@ -109,7 +111,6 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def resetGame(self):
         """clears pieces from the board"""
-        # TODO write code to reset game
         self.boardArray = [[0 for i in range(7)] for j in range(7)]
         # set game pieces back to zero in game logic
 
