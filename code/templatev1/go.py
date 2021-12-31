@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import QMainWindow, QDesktopWidget
 from PyQt5.QtCore import Qt
 from board import Board
 from score_board import ScoreBoard
+from how_to_play import HowTo
 
 
 class Go(QMainWindow):
@@ -16,6 +17,9 @@ class Go(QMainWindow):
     def getScoreBoard(self):
         return self.scoreBoard
 
+    def getHowTo(self):
+        return self.how_to_play
+
     def initUI(self):
         """initiates application UI"""
         self.board = Board(self)
@@ -23,6 +27,7 @@ class Go(QMainWindow):
         self.scoreBoard = ScoreBoard()
         self.addDockWidget(Qt.RightDockWidgetArea, self.scoreBoard)
         self.scoreBoard.make_connection(self.board)
+        self.howToPlay = HowTo()
 
         self.resize(800, 800)
         self.center()
