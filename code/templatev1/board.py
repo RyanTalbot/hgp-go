@@ -11,8 +11,8 @@ class Board(QFrame):  # base the board on a QFrame widget
     clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
     changePlayerTurnSignal = pyqtSignal(int)  # signal sent when swap player is updated.
 
-    boardWidth = 6  # board is 6 squares wide
-    boardHeight = 6  # board is 6 squares tall
+    boardWidth = 7  # board is 6 squares wide
+    boardHeight = 7  # board is 6 squares tall
     timerSpeed = 1000  # the timer updates ever 1 second
     counter = 300  # the number the counter will count down from 300
     playerTurn = Piece.Black  # starting player is always black
@@ -43,8 +43,8 @@ class Board(QFrame):  # base the board on a QFrame widget
         x_pos = event.x()
         y_pos = event.y()
 
-        x_coord = round(x_pos / self.squareWidth() - 1)
-        y_coord = round(y_pos / self.squareHeight() - 1)
+        x_coord = round(x_pos / self.squareWidth())
+        y_coord = round(y_pos / self.squareHeight())
 
         print(x_coord, y_coord)
 
@@ -54,7 +54,7 @@ class Board(QFrame):  # base the board on a QFrame widget
             self.changePlayerTurn()
         else:
             self.showNotification("Invalid Move!")
-            
+
         self.printBoardArray()
         self.update()
 
@@ -118,26 +118,25 @@ class Board(QFrame):  # base the board on a QFrame widget
     def tryMove(self, newX, newY):
         """tries to move a piece"""
 
-    # WORKED NEEDED
     def drawBoardSquares(self, painter):
         """draw all the square on the board"""
         brush = QBrush(Qt.SolidPattern)
         brush.setColor(QColor.fromRgb(217, 179, 255))  # test color
         painter.setBrush(brush)
 
-        for row in range(0, Board.boardHeight):
+        for row in range(0, Board.boardHeight-1):
 
-            if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new rows
+            if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new columns
                 brush.setColor(QColor.fromRgb(0, 153, 153))
             else:
                 brush.setColor(QColor.fromRgb(217, 179, 255))
 
-            for col in range(0, Board.boardWidth):
+            for col in range(0, Board.boardWidth-1):
                 painter.save()
                 colTransformation = self.squareWidth() * col
                 rowTransformation = self.squareHeight() * row
                 painter.translate(colTransformation, rowTransformation)
-                painter.fillRect(row, col, self.squareWidth(), self.squareHeight(), brush)
+                painter.fillRect(35, 35, self.squareWidth(), self.squareHeight(), brush)
                 painter.restore()
 
                 if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new columns
@@ -145,36 +144,31 @@ class Board(QFrame):  # base the board on a QFrame widget
                 else:
                     brush.setColor(QColor.fromRgb(217, 179, 255))
 
-    # WORK NEEDED
     def drawPieces(self, painter):
         """draw the prices on the board"""
-        color = Qt.transparent  # empty square could be modeled with transparent pieces
-        for row in range(-1, len(self.boardArray)):
 
-            for col in range(-1, len(self.boardArray)):
+        for row in range(0, len(self.boardArray)):
+
+            for col in range(0, len(self.boardArray[0])):
+
+                if self.boardArray[row][col] == 1:
+                    painter.setPen(QPen(Qt.transparent, 2, Qt.SolidLine))
+                    painter.setBrush(QBrush(Qt.white, Qt.SolidPattern))
+                elif self.boardArray[row][col] == 2:
+                    painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
+                    painter.setBrush(QBrush(Qt.black, Qt.SolidPattern))
+                else:
+                    painter.setPen(QPen(Qt.transparent, 2, Qt.SolidLine))
+                    painter.setBrush(QBrush(Qt.transparent, Qt.SolidPattern))
 
                 painter.save()
-                painter.translate(((self.squareWidth()) * row) + self.squareWidth() / 2,
-                                  (self.squareHeight()) * col + self.squareHeight() / 2)
+                colTransformation = self.squareWidth() * col
+                rowTransformation = self.squareHeight() * row
+                painter.translate(colTransformation, rowTransformation)
 
-                # currently based on the array using INT variables
-                # will change to game pieces next
-
-                if self.boardArray[col][row] == 0:
-                    color = QColor(Qt.transparent)
-                elif self.boardArray[col][row] == 1:
-                    color = QColor(Qt.white)
-                elif self.boardArray[col][row] == 2:
-                    color = QColor(Qt.black)
-
-                painter.setPen(color)
-                painter.setBrush(color)
-
-                radius = (self.squareWidth() - 2) / 2
-                radius2 = (self.squareHeight() - 2) / 2
-
-                center = QPoint(radius, radius2)
-                painter.drawEllipse(center, radius - 15, radius2 - 15)
+                radius = (self.squareWidth() * 0.55) / 2
+                center = QPoint(35, 35)
+                painter.drawEllipse(center, radius, radius)
                 painter.restore()
 
     def showNotification(self, message):
