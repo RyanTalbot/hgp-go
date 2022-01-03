@@ -48,8 +48,13 @@ class Board(QFrame):  # base the board on a QFrame widget
 
         print(x_coord, y_coord)
 
-        # Using 1 as a baseline to test for accurate clicks
-        self.boardArray[y_coord][x_coord] = 1
+        # Adding a check system to ensure no invalid moves
+        if self.boardArray[y_coord][x_coord] == 0:
+            self.boardArray[y_coord][x_coord] = self.playerTurn
+            self.changePlayerTurn()
+        else:
+            self.showNotification("Invalid Move!")
+            
         self.printBoardArray()
         self.update()
 
@@ -103,9 +108,6 @@ class Board(QFrame):  # base the board on a QFrame widget
         # TODO you could call some game logic here
         self.clickLocationSignal.emit(clickLoc)
         self.mousePosToColRow(event)
-
-        # testing player turn
-        self.changePlayerTurn()
 
     def resetGame(self):
         """clears pieces from the board"""
