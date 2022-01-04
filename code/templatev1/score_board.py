@@ -1,7 +1,10 @@
-from PyQt5.Qt import *
-from PyQt5.QtWidgets import *
+from PyQt5.QtWidgets import QAction, QDockWidget, QFrame, QGridLayout, QLabel, QMessageBox, QPushButton, QVBoxLayout, \
+    QWidget
 from PyQt5.QtCore import *
+from board import Board
 from PyQt5.QtGui import *
+from PyQt5 import QtCore, QtGui
+from functools import partial
 
 
 class ScoreBoard(QDockWidget):
@@ -9,6 +12,7 @@ class ScoreBoard(QDockWidget):
 
     def __init__(self):
         super().__init__()
+        self.board = Board(self)
         self.initUI()
 
     def initUI(self):
@@ -26,6 +30,25 @@ class ScoreBoard(QDockWidget):
         self.mainWidget = QWidget()
         self.mainLayout = QVBoxLayout()
 
+        # Button options for Start/Reset
+        self.btn_startGame = QPushButton("Start")
+        self.btn_startGame.setFixedWidth(185)
+        self.btn_startGame.setFixedHeight(50)
+        self.btn_startGame.setStyleSheet("QPushButton { background-color: rgb(255,255,255) }")
+        self.btn_startGame.clicked.connect(partial(self.click_btn, self.btn_startGame))
+
+        self.btn_resetGame = QPushButton("Reset")
+        self.btn_resetGame.setFixedWidth(185)
+        self.btn_resetGame.setFixedHeight(50)
+        self.btn_resetGame.setStyleSheet("QPushButton { background-color: rgb(255,255,255) }")
+        self.btn_resetGame.clicked.connect(partial(self.click_btn,self.btn_resetGame))
+
+        self.btn_skipTurn = QPushButton("Skip Turn")
+        self.btn_skipTurn.setFixedWidth(185)
+        self.btn_skipTurn.setFixedHeight(50)
+        self.btn_skipTurn.setStyleSheet("QPushButton { background-color: rgb(255,255,255) }")
+        # self.btn_skipTurn.clicked.connect(self.on_click)
+
         # create two labels which will be updated by signals
         self.label_clickLocation = QLabel("Click Location: ")
         self.label_timeRemaining = QLabel("Time remaining: ")
@@ -35,18 +58,16 @@ class ScoreBoard(QDockWidget):
         self.label_PrisonersTakenBlack = QLabel("Prisoners Taken by Black: ")
         self.label_PrisonersTakenWhite = QLabel("Prisoners Taken by White: ")
 
-        # Button for passing a turn
-        self.btn_skipTurn.clicked.connect(self.skipPlayerTurn())
-
         # Add new labels to docked widget
         self.mainWidget.setLayout(self.mainLayout)
+        self.mainLayout.addWidget(self.btn_startGame)
         self.mainLayout.addWidget(self.label_playersTurn)
-        self.mainWidget.setLayout(self.mainLayout)
         self.mainLayout.addWidget(self.label_clickLocation)
         self.mainLayout.addWidget(self.label_timeRemaining)
+        self.mainLayout.addWidget(self.btn_skipTurn)
         self.mainLayout.addWidget(self.label_PrisonersTakenBlack)
         self.mainLayout.addWidget(self.label_PrisonersTakenWhite)
-        self.mainLayout.addWidget(self.btn_skipTurn)
+        self.mainLayout.addWidget(self.btn_resetGame)
         self.setWidget(self.mainWidget)
         self.show()
 
@@ -60,6 +81,7 @@ class ScoreBoard(QDockWidget):
         # when the updateTimerSignal is emitted in the board the setTimeRemaining slot receives it
         board.updateTimerSignal.connect(self.setTimeRemaining)
         board.changePlayerTurnSignal.connect(self.updatePlayerTurn)
+        # board.skipPlayerTurnSignal.connect(self.skipPlayerTurn)
 
     @pyqtSlot(str)  # checks to make sure that the following slot is receiving an argument of the type 'int'
     def setClickLocation(self, clickLoc):
@@ -75,8 +97,6 @@ class ScoreBoard(QDockWidget):
         print('slot ' + update)
         # self.redraw()
 
-    # This will be updated when game logic is added to show who's piece went last
-    # Needs to be connected to board with signal
     def updatePlayerTurn(self, Piece):
         if Piece == 1:
             self.label_playersTurn.setText("White's Turn To Move")
@@ -84,8 +104,24 @@ class ScoreBoard(QDockWidget):
             self.label_playersTurn.setText("Black's Turn To Move")
 
     # Allows player to skip their turn
-    def skipPlayerTurn(self, playerTurn):
-        if playerTurn == Piece.Black:
+    # Doesn't work
+    def skipPlayerTurn(self, Piece):
+        if Piece == 1:
             self.label_playersTurn.setText("Black has skipped, White's Turn To Move")
-        elif playerTurn == Piece.White:
+            self.board.playerTurn = Piece.White
+        elif Piece == 2:
             self.label_playersTurn.setText("White has skipped, Black's Turn To Move")
+            self.board.playerTurn = Piece.Black
+
+    def click_btn(self, btn):
+
+        if btn == self.btn_resetGame:
+            option = QMessageBox.question(
+                self, 'Reset Game', 'Resetting The Game Means You Will Lose All Current Progress!',
+                QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+
+            if option == QMessageBox.Yes:
+
+                print("GAME RESET")
+            else:
+                pass
