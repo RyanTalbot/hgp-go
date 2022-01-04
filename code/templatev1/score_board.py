@@ -35,6 +35,9 @@ class ScoreBoard(QDockWidget):
         self.label_PrisonersTakenBlack = QLabel("Prisoners Taken by Black: ")
         self.label_PrisonersTakenWhite = QLabel("Prisoners Taken by White: ")
 
+        # Button for passing a turn
+        self.btn_skipTurn.clicked.connect(self.skipPlayerTurn())
+
         # Add new labels to docked widget
         self.mainWidget.setLayout(self.mainLayout)
         self.mainLayout.addWidget(self.label_playersTurn)
@@ -43,6 +46,7 @@ class ScoreBoard(QDockWidget):
         self.mainLayout.addWidget(self.label_timeRemaining)
         self.mainLayout.addWidget(self.label_PrisonersTakenBlack)
         self.mainLayout.addWidget(self.label_PrisonersTakenWhite)
+        self.mainLayout.addWidget(self.btn_skipTurn)
         self.setWidget(self.mainWidget)
         self.show()
 
@@ -74,8 +78,14 @@ class ScoreBoard(QDockWidget):
     # This will be updated when game logic is added to show who's piece went last
     # Needs to be connected to board with signal
     def updatePlayerTurn(self, Piece):
-
         if Piece == 1:
             self.label_playersTurn.setText("White's Turn To Move")
         elif Piece == 2:
             self.label_playersTurn.setText("Black's Turn To Move")
+
+    # Allows player to skip their turn
+    def skipPlayerTurn(self, playerTurn):
+        if playerTurn == Piece.Black:
+            self.label_playersTurn.setText("Black has skipped, White's Turn To Move")
+        elif playerTurn == Piece.White:
+            self.label_playersTurn.setText("White has skipped, Black's Turn To Move")
