@@ -7,8 +7,10 @@ from PyQt5.QtWidgets import *
 class HowTo(QWidget):
     def __init__(self):
         super(HowTo, self).__init__()
-        self.setGeometry(350, 150, 400, 400)
+        self.setGeometry(350, 150, 700, 700)
         self.initHowTo()
+        self.center()
+
 
     def initHowTo(self):
         vbox = QVBoxLayout()
@@ -50,3 +52,9 @@ class HowTo(QWidget):
 
         scroll.setWidget(scrollContent)
         self.show()
+
+    def center(self):
+        """centers the window on the screen"""
+        screen = QDesktopWidget().screenGeometry()
+        size = self.geometry()
+        self.move((screen.width() - size.width()) / 2, (screen.height() - size.height()) / 2)
