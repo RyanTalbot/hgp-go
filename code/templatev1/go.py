@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QAction, QMessageBox
+from PyQt5.QtWidgets import QAction, QCheckBox, QDesktopWidget, QMainWindow, QMessageBox
 from PyQt5.QtCore import Qt
 from board import Board
 from score_board import ScoreBoard
@@ -10,6 +10,7 @@ class Go(QMainWindow):
     def __init__(self):
         super().__init__()
         self.initUI()
+        self.howToPlay = HowTo()
 
         # Adding main menu for help option
         mainMenu = self.menuBar()
@@ -37,7 +38,6 @@ class Go(QMainWindow):
         self.scoreBoard = ScoreBoard()
         self.addDockWidget(Qt.RightDockWidgetArea, self.scoreBoard)
         self.scoreBoard.make_connection(self.board)
-        # self.howToPlay = HowTo()
 
         self.resize(800, 800)
         self.center()
