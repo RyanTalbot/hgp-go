@@ -8,7 +8,6 @@ from piece import Piece
 # TODO - Show how much territory is controlled by a player
 # TODO - Allow a player to pass
 # TODO - Allow the game to be reset
-# TODO - Implement placement of stones in valid locations only
 # TODO - Implement capture of stone(s)
 
 

@@ -11,7 +11,7 @@ class Go(QMainWindow):
         super().__init__()
         self.initUI()
 
-      # Adding main menu for help option
+        # Adding main menu for help option
         mainMenu = self.menuBar()
         helpMenu = mainMenu.addMenu("Help")
 
@@ -37,7 +37,7 @@ class Go(QMainWindow):
         self.scoreBoard = ScoreBoard()
         self.addDockWidget(Qt.RightDockWidgetArea, self.scoreBoard)
         self.scoreBoard.make_connection(self.board)
-        self.howToPlay = HowTo()
+        # self.howToPlay = HowTo()
 
         self.resize(800, 800)
         self.center()
@@ -53,7 +53,15 @@ class Go(QMainWindow):
     def rulesMsg(self):
         message = QMessageBox()
         # simple rules taken from wikipedia
-        message.setText("The Rules \n\nThe board is empty at the onset of the game (unless players agree to place a handicap) \n\n Black makes the first move, after which White and Black alternate \n\nA move consists of placing one stone of one's own color on an empty intersection on the board \n\nA player may pass their turn at any time. \n\nA stone or solidly connected group of stones of one color is captured and removed from the board when all the intersections directly adjacent to it are occupied by the enemy. (Capture of the enemy takes precedence over self-capture.) \n\nNo stone may be played so as to recreate a former board position. \n\nTwo consecutive passes end the game. \n\nA player's area consists of all the points the player has either occupied or surrounded. \n\nThe player with more area wins.")
+        message.setText(
+            "The Rules \n\nThe board is empty at the onset of the game (unless players agree to place a handicap) "
+            "\n\n Black makes the first move, after which White and Black alternate \n\nA move consists of placing "
+            "one stone of one's own color on an empty intersection on the board \n\nA player may pass their turn at "
+            "any time. \n\nA stone or solidly connected group of stones of one color is captured and removed from the "
+            "board when all the intersections directly adjacent to it are occupied by the enemy. (Capture of the "
+            "enemy takes precedence over self-capture.) \n\nNo stone may be played so as to recreate a former board "
+            "position. \n\nTwo consecutive passes end the game. \n\nA player's area consists of all the points the "
+            "player has either occupied or surrounded. \n\nThe player with more area wins.")
         message.setIcon(QMessageBox.Question)
         message.setWindowTitle("Rules")
         message.exec()
