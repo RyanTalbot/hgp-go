@@ -5,6 +5,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from piece import Piece
 
+
 # TODO - Show how much territory is controlled by a player
 # TODO - Allow a player to pass
 # TODO - Allow the game to be reset
@@ -124,13 +125,14 @@ class Board(QFrame):  # base the board on a QFrame widget
         brush.setColor(QColor.fromRgb(217, 179, 255))  # test color
         painter.setBrush(brush)
 
-        for row in range(0, Board.boardHeight-1):
-
+        for row in range(0, Board.boardHeight - 1):
             if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new columns
                 brush.setColor(QColor.fromRgb(0, 153, 153))
             else:
                 brush.setColor(QColor.fromRgb(217, 179, 255))
 
+            for col in range(0, Board.boardWidth - 1):
+              =======
             for col in range(0, Board.boardWidth-1):
                 painter.save()
                 colTransformation = self.squareWidth() * col
@@ -147,16 +149,20 @@ class Board(QFrame):  # base the board on a QFrame widget
     def drawPieces(self, painter):
         """draw the prices on the board"""
 
+#         blackNo = 0
+#         whiteNo = 0
+
         for row in range(0, len(self.boardArray)):
 
             for col in range(0, len(self.boardArray[0])):
-
                 if self.boardArray[row][col] == 1:
                     painter.setPen(QPen(Qt.transparent, 2, Qt.SolidLine))
                     painter.setBrush(QBrush(Qt.white, Qt.SolidPattern))
+#                     whiteNo += 1
                 elif self.boardArray[row][col] == 2:
                     painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
                     painter.setBrush(QBrush(Qt.black, Qt.SolidPattern))
+#                     blackNo += 1
                 else:
                     painter.setPen(QPen(Qt.transparent, 2, Qt.SolidLine))
                     painter.setBrush(QBrush(Qt.transparent, Qt.SolidPattern))
@@ -171,13 +177,22 @@ class Board(QFrame):  # base the board on a QFrame widget
                 painter.drawEllipse(center, radius, radius)
                 painter.restore()
 
+    # Checks to see if the board is filled
+#     def boardFilled(self):
+#         for row in self.boardArray:
+#             for i in row:
+#                 if i == 0:
+#                     return False
+#         return True
+
     def showNotification(self, message):
         QMessageBox.about(self, "!", message)
 
     # Can be moved to game logic if needed
     def changePlayerTurn(self):
         # function to swap turns
-        self.counter = 300  # reset timer every turn
+        self.counter = 20  # reset timer every turn
+
         print(" -- Next Players Turn -- ")
         if self.playerTurn == Piece.Black:
             self.playerTurn = Piece.White
