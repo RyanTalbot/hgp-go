@@ -1,8 +1,8 @@
 import math
 
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtWidgets import QFrame
+from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QPoint, QRectF
+from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen
 from piece import Piece
 
 
@@ -16,6 +16,7 @@ class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
     clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
     changePlayerTurnSignal = pyqtSignal(int)  # signal sent when swap player is updated.
+    #skipPlayerTurnSignal = pyqtSignal()  # signal sent when player skips turn
 
     boardWidth = 7  # board is 6 squares wide
     boardHeight = 7  # board is 6 squares tall
@@ -48,8 +49,8 @@ class Board(QFrame):  # base the board on a QFrame widget
         x_pos = event.x()
         y_pos = event.y()
 
-        x_coord = round(x_pos / self.squareWidth())
-        y_coord = round(y_pos / self.squareHeight())
+        x_coord = int(x_pos / self.squareWidth())       # change to int for more accurate picks
+        y_coord = int(y_pos / self.squareHeight())
 
         print(x_coord, y_coord)
 
@@ -92,7 +93,7 @@ class Board(QFrame):  # base the board on a QFrame widget
             else:
                 self.counter -= 1
             # print('timerEvent()', self.counter)
-            self.updateTimerSignal.emit(self.counter)
+            # self.updateTimerSignal.emit(self.counter)
         else:
             super(Board, self).timerEvent(event)  # if we do not handle an event we should pass it to the super
             # class for handling other wise pass it to the super class for handling
@@ -114,7 +115,8 @@ class Board(QFrame):  # base the board on a QFrame widget
     def resetGame(self):
         """clears pieces from the board"""
         self.boardArray = [[0 for i in range(7)] for j in range(7)]
-        # set game pieces back to zero in game logic
+        painter = QPainter(self)
+        self.drawPieces(painter)
 
     def tryMove(self, newX, newY):
         """tries to move a piece"""
@@ -131,14 +133,12 @@ class Board(QFrame):  # base the board on a QFrame widget
             else:
                 brush.setColor(QColor.fromRgb(217, 179, 255))
 
-            for col in range(0, Board.boardWidth - 1):
-              =======
             for col in range(0, Board.boardWidth-1):
                 painter.save()
                 colTransformation = self.squareWidth() * col
                 rowTransformation = self.squareHeight() * row
                 painter.translate(colTransformation, rowTransformation)
-                painter.fillRect(35, 35, self.squareWidth(), self.squareHeight(), brush)
+                painter.fillRect(55, 55, self.squareWidth(), self.squareHeight(), brush)
                 painter.restore()
 
                 if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new columns
@@ -155,14 +155,14 @@ class Board(QFrame):  # base the board on a QFrame widget
         for row in range(0, len(self.boardArray)):
 
             for col in range(0, len(self.boardArray[0])):
+
                 if self.boardArray[row][col] == 1:
                     painter.setPen(QPen(Qt.transparent, 2, Qt.SolidLine))
                     painter.setBrush(QBrush(Qt.white, Qt.SolidPattern))
-#                     whiteNo += 1
+
                 elif self.boardArray[row][col] == 2:
                     painter.setPen(QPen(Qt.black, 2, Qt.SolidLine))
                     painter.setBrush(QBrush(Qt.black, Qt.SolidPattern))
-#                     blackNo += 1
                 else:
                     painter.setPen(QPen(Qt.transparent, 2, Qt.SolidLine))
                     painter.setBrush(QBrush(Qt.transparent, Qt.SolidPattern))
@@ -173,7 +173,7 @@ class Board(QFrame):  # base the board on a QFrame widget
                 painter.translate(colTransformation, rowTransformation)
 
                 radius = (self.squareWidth() * 0.55) / 2
-                center = QPoint(35, 35)
+                center = QPoint(55, 55)
                 painter.drawEllipse(center, radius, radius)
                 painter.restore()
 
@@ -188,10 +188,9 @@ class Board(QFrame):  # base the board on a QFrame widget
     def showNotification(self, message):
         QMessageBox.about(self, "!", message)
 
-    # Can be moved to game logic if needed
     def changePlayerTurn(self):
         # function to swap turns
-        self.counter = 20  # reset timer every turn
+        self.counter = 300  # reset timer every turn
 
         print(" -- Next Players Turn -- ")
         if self.playerTurn == Piece.Black:
