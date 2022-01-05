@@ -1,6 +1,6 @@
 import math
 
-from PyQt5.QtWidgets import QFrame
+from PyQt5.QtWidgets import QFrame, QMessageBox
 from PyQt5.QtCore import Qt, QBasicTimer, pyqtSignal, QPoint, QRectF
 from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen
 from piece import Piece
