@@ -30,23 +30,26 @@ class ScoreBoard(QDockWidget):
         self.mainWidget = QWidget()
         self.mainLayout = QVBoxLayout()
 
-        # Button options for Start/Reset
+        # Button options for Start/Reset/Skip
         self.btn_startGame = QPushButton("Start")
         self.btn_startGame.setFixedWidth(185)
         self.btn_startGame.setFixedHeight(50)
         self.btn_startGame.setStyleSheet("QPushButton { background-color: rgb(255,255,255) }")
+        self.btn_startGame.setFont(QFont("Helvetica", 14))
         self.btn_startGame.clicked.connect(partial(self.click_btn, self.btn_startGame))
 
         self.btn_resetGame = QPushButton("Reset")
         self.btn_resetGame.setFixedWidth(185)
         self.btn_resetGame.setFixedHeight(50)
         self.btn_resetGame.setStyleSheet("QPushButton { background-color: rgb(255,255,255) }")
+        self.btn_resetGame.setFont(QFont("Helvetica", 14))
         self.btn_resetGame.clicked.connect(partial(self.click_btn,self.btn_resetGame))
 
         self.btn_skipTurn = QPushButton("Skip Turn")
         self.btn_skipTurn.setFixedWidth(185)
         self.btn_skipTurn.setFixedHeight(50)
         self.btn_skipTurn.setStyleSheet("QPushButton { background-color: rgb(255,255,255) }")
+        self.btn_skipTurn.setFont(QFont("Helvetica", 14))
         # self.btn_skipTurn.clicked.connect(self.on_click)
 
         # create two labels which will be updated by signals
@@ -113,15 +116,15 @@ class ScoreBoard(QDockWidget):
             self.label_playersTurn.setText("White has skipped, Black's Turn To Move")
             self.board.playerTurn = Piece.Black
 
+    # Method for resetting the game
     def click_btn(self, btn):
-
         if btn == self.btn_resetGame:
+            # Giving the user an option to ensure it wasn't clicked by mistake
             option = QMessageBox.question(
                 self, 'Reset Game', 'Resetting The Game Means You Will Lose All Current Progress!',
                 QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
             if option == QMessageBox.Yes:
-
                 print("GAME RESET")
             else:
                 pass

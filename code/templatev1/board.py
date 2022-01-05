@@ -87,7 +87,7 @@ class Board(QFrame):  # base the board on a QFrame widget
             else:
                 self.counter -= 1
             # print('timerEvent()', self.counter)
-            # self.updateTimerSignal.emit(self.counter)
+            self.updateTimerSignal.emit(self.counter)
         else:
             super(Board, self).timerEvent(event)  # if we do not handle an event we should pass it to the super
             # class for handling other wise pass it to the super class for handling
@@ -108,7 +108,9 @@ class Board(QFrame):  # base the board on a QFrame widget
 
     def resetGame(self):
         """clears pieces from the board"""
+        # resetting the 2d array
         self.boardArray = [[0 for i in range(7)] for j in range(7)]
+        # using drawPieces method to change all pieces transparent
         painter = QPainter(self)
         self.drawPieces(painter)
 
@@ -135,17 +137,13 @@ class Board(QFrame):  # base the board on a QFrame widget
                 painter.fillRect(55, 55, self.squareWidth(), self.squareHeight(), brush)
                 painter.restore()
 
-                if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new columns
+                if brush.color() == (QColor.fromRgb(217, 179, 255)):  # to ensure alternate colors on new rows
                     brush.setColor(QColor.fromRgb(0, 153, 153))
                 else:
                     brush.setColor(QColor.fromRgb(217, 179, 255))
 
     def drawPieces(self, painter):
         """draw the prices on the board"""
-
-#         blackNo = 0
-#         whiteNo = 0
-
         for row in range(0, len(self.boardArray)):
 
             for col in range(0, len(self.boardArray[0])):
