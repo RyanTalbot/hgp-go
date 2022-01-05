@@ -6,12 +6,6 @@ from PyQt5.QtGui import QBrush, QColor, QImage, QPainter, QPen
 from piece import Piece
 
 
-# TODO - Show how much territory is controlled by a player
-# TODO - Allow a player to pass
-# TODO - Allow the game to be reset
-# TODO - Implement capture of stone(s)
-
-
 class Board(QFrame):  # base the board on a QFrame widget
     updateTimerSignal = pyqtSignal(int)  # signal sent when timer is updated
     clickLocationSignal = pyqtSignal(str)  # signal sent when there is a new click location
